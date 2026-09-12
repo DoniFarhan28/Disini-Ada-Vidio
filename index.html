@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vidio Stream - Streaming Film, Series & Video HD</title>
+  <meta name="description" content="Platform streaming video profesional dengan katalog film, pemutar video interaktif, navigasi dinamis, dan integrasi monetisasi." />
+  <meta property="og:title" content="Vidio Stream - Streaming Film, Series & Video HD" />
+  <meta property="og:description" content="Platform streaming video profesional dengan katalog film, pemutar video interaktif, navigasi dinamis, dan integrasi monetisasi." />
+  <meta property="og:type" content="website" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            darkBg: '#0b0b0e',
+            darkCard: '#13131a',
+            darkCardHover: '#1c1c26',
+            darkBorder: '#232330',
+            gold: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0b0e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #232330;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f59e0b;
+    }
+    .gold-glow {
+      box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.4);
+    }
+    .card-zoom:hover img {
+      transform: scale(1.05);
+    }
+  </style>
+
+  <!-- ========================================== -->
+  <!-- INTEGRASI IKLAN: SOCIAL BAR (WAJIB)         -->
+  <!-- ========================================== -->
+  <script src="https://bleatbehind.com/25/c5/82/25c5826d5d3607775a4ea420f92e5256.js"></script>
+</head>
+
+<body class="bg-[#0b0b0e] text-slate-100 min-h-screen flex flex-col transition-colors duration-300 antialiased selection:bg-amber-500 selection:text-black">
+
+  <!-- ========================================== -->
+  <!-- TOP NAVBAR                                 -->
+  <!-- ========================================== -->
+  <header id="main-header" class="sticky top-0 z-40 w-full bg-[#0b0b0e]/90 backdrop-blur-md border-b border-[#232330] transition-colors duration-300">
+    <div class="max-w-[1920px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo & Mobile Trigger -->
+      <div class="flex items-center gap-3">
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg hover:bg-white/5 text-slate-300 hover:text-white" aria-label="Buka Menu">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+
+        <a href="javascript:void(0)" onclick="navigateTo('home')" class="flex items-center gap-2 group">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-400 flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
+            <i data-lucide="play" class="w-5 h-5 text-black fill-black ml-0.5"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-lg font-extrabold tracking-tight text-white flex items-center gap-1">
+              VIDIO<span class="text-amber-400 font-black">.PRO</span>
+            </span>
+            <span class="text-[9px] uppercase tracking-widest text-slate-400 -mt-1 font-semibold">Corporate Stream</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- GOLD SEARCH FILTER (Syarat 3: Pencarian Gold Filter Real-time) -->
+      <div class="flex-1 max-w-xl mx-4 hidden sm:block">
+        <div class="relative group">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-amber-500">
+            <i data-lucide="search" class="w-4 h-4"></i>
+          </div>
+          <input 
+            type="text" 
+            id="gold-search-input"
+            placeholder="Cari judul film, serial, aktor, atau anime favorit..." 
+            class="w-full pl-10 pr-10 py-2 rounded-xl bg-[#13131a] border border-[#232330] text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30 transition-all shadow-inner"
+          />
+          <button id="clear-search-btn" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-white hidden">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Controls: Night/Light Mode Toggle & User Profile -->
+      <div class="flex items-center gap-2 sm:gap-3">
+
+        <!-- Direct VIP button -->
+        <button 
+          onclick="handleDirectLinkClick()" 
+          class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-extrabold text-xs shadow-md shadow-amber-500/10 transition-all hover:scale-102"
+        >
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 fill-current"></i>
+          <span>VIP ACCESS</span>
+        </button>
+
+        <!-- FITUR NIGHT & LIGHT MODE TOGGLE (Syarat 4) -->
+        <button 
+          id="theme-toggle-btn"
+          title="Beralih Mode Gelap/Terang"
+          class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#13131a] hover:bg-[#1c1c26] border border-[#232330] text-xs font-semibold text-slate-200 transition-all"
+        >
+          <i data-lucide="moon" id="theme-icon" class="w-4 h-4 text-amber-400"></i>
+          <span id="theme-text" class="hidden sm:inline">Night</span>
+        </button>
+
+        <!-- Notification Bell -->
+        <div class="relative">
+          <button onclick="toggleNotifications()" class="p-2 rounded-xl bg-[#13131a] hover:bg-[#1c1c26] border border-[#232330] text-slate-300 hover:text-white relative">
+            <i data-lucide="bell" class="w-4 h-4"></i>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-500"></span>
+          </button>
+          
+          <!-- Notification Dropdown -->
+          <div id="notif-dropdown" class="hidden absolute right-0 mt-2 w-72 p-3 rounded-2xl bg-[#13131a] border border-[#232330] shadow-2xl z-50">
+            <div class="flex items-center justify-between pb-2 border-b border-[#232330]">
+              <span class="text-xs font-bold text-white">Notifikasi Terbaru</span>
+              <span class="text-[10px] text-amber-400">Tandai dibaca</span>
+            </div>
+            <div class="mt-2 space-y-2 text-xs">
+              <div class="p-2 rounded-lg bg-white/5 hover:bg-white/10 cursor-pointer" onclick="handleDirectLinkClick()">
+                <p class="font-semibold text-amber-400">Episode Baru Dirilis!</p>
+                <p class="text-slate-400 text-[11px]">Episode 223 kini telah tersedia dalam kualitas Ultra HD.</p>
+              </div>
+              <div class="p-2 rounded-lg bg-white/5 hover:bg-white/10 cursor-pointer" onclick="navigateTo('viral')">
+                <p class="font-semibold text-slate-200">Sedang Viral Hari Ini</p>
+                <p class="text-slate-400 text-[11px]">Video Ome TV dan cuplikan media sosial terpopuler.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User / Auth Quick Status -->
+        <button 
+          onclick="navigateTo('media')"
+          class="flex items-center gap-2 p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-[#13131a] hover:bg-[#1c1c26] border border-[#232330] transition"
+        >
+          <div class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i>
+          </div>
+          <span id="user-btn-label" class="text-xs font-semibold text-slate-200 hidden md:inline">Masuk Akun</span>
+        </button>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Search Bar (Only visible on small mobile screens) -->
+  <div class="sm:hidden px-4 py-2.5 bg-[#0b0b0e] border-b border-[#232330]">
+    <div class="relative">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-amber-500">
+        <i data-lucide="search" class="w-3.5 h-3.5"></i>
+      </div>
+      <input 
+        type="text" 
+        oninput="document.getElementById('gold-search-input').value = this.value; executeGoldSearch(this.value.trim().toLowerCase());"
+        placeholder="Cari judul film, anime, series..." 
+        class="w-full pl-9 pr-3 py-1.5 rounded-lg bg-[#13131a] border border-[#232330] text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400"
+      />
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MAIN LAYOUT WRAPPER                        -->
+  <!-- ========================================== -->
+  <div class="flex-1 flex max-w-[1920px] w-full mx-auto relative">
+
+    <!-- ========================================== -->
+    <!-- LEFT SIDEBAR: MENU SISTEM HALAMAN (Syarat 1) -->
+    <!-- ========================================== -->
+    <aside 
+      id="left-sidebar" 
+      class="fixed lg:static top-16 bottom-0 left-0 z-30 w-64 bg-[#0b0b0e] lg:bg-transparent border-r border-[#232330] flex flex-col justify-between p-4 transition-transform duration-300 -translate-x-full lg:translate-x-0 shrink-0 overflow-y-auto"
+    >
+      <div class="space-y-6">
+        
+        <!-- Navigation Group -->
+        <div>
+          <p class="text-[10px] font-extrabold tracking-wider text-slate-400 uppercase px-3 mb-2">Menu Utama</p>
+          <nav class="space-y-1">
+
+            <!-- 1. HOME -->
+            <button 
+              id="nav-home" 
+              onclick="navigateTo('home')"
+              class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition bg-amber-500/10 text-amber-400 border border-amber-500/20"
+            >
+              <i data-lucide="home" class="w-4 h-4"></i>
+              <span>Home</span>
+            </button>
+
+            <!-- 2. VIRAL -->
+            <button 
+              id="nav-viral" 
+              onclick="navigateTo('viral')"
+              class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition"
+            >
+              <i data-lucide="flame" class="w-4 h-4 text-orange-500"></i>
+              <span>Viral</span>
+              <span class="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400">HOT</span>
+            </button>
+
+            <!-- 3. OME TV -->
+            <button 
+              id="nav-ometv" 
+              onclick="navigateTo('ometv')"
+              class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition"
+            >
+              <i data-lucide="video" class="w-4 h-4 text-emerald-400"></i>
+              <span>Ome Tv</span>
+              <span class="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400">LIVE</span>
+            </button>
+
+            <!-- 4. LANGUAGE -->
+            <button 
+              id="nav-language" 
+              onclick="navigateTo('language')"
+              class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition"
+            >
+              <i data-lucide="globe" class="w-4 h-4 text-sky-400"></i>
+              <span>Language (Semua)</span>
+            </button>
+
+            <!-- 5. CONTENT NEGARA -->
+            <button 
+              id="nav-content" 
+              onclick="navigateTo('content')"
+              class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition"
+            >
+              <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
+              <span>Content Asal Negara</span>
+              <span id="badge-country-nav" class="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-400">ID</span>
+            </button>
+
+            <!-- 6. MEDIA X & FB (LOGIN) -->
+            <button 
+              id="nav-media" 
+              onclick="navigateTo('media')"
+              class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition"
+            >
+              <i data-lucide="share-2" class="w-4 h-4 text-indigo-400"></i>
+              <span>Media X &amp; Fb</span>
+              <span class="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400">Login</span>
+            </button>
+
+            <!-- 7. HISTORY -->
+            <button 
+              id="nav-history" 
+              onclick="navigateTo('history')"
+              class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition"
+            >
+              <i data-lucide="clock" class="w-4 h-4 text-purple-400"></i>
+              <span>History</span>
+              <span id="history-count-badge" class="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-400">0</span>
+            </button>
+
+            <!-- 8. SETTING -->
+            <button 
+              id="nav-setting" 
+              onclick="navigateTo('setting')"
+              class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition"
+            >
+              <i data-lucide="settings" class="w-4 h-4 text-slate-400"></i>
+              <span>Setting</span>
+            </button>
+
+          </nav>
+        </div>
+
+        <!-- Category Shortcut -->
+        <div>
+          <p class="text-[10px] font-extrabold tracking-wider text-slate-400 uppercase px-3 mb-2">Genre Film</p>
+          <div class="flex flex-wrap gap-1 px-2">
+            <button onclick="filterGenre('Aksi')" class="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-amber-500/20 hover:text-amber-400 transition text-slate-300">Aksi</button>
+            <button onclick="filterGenre('Horor')" class="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-amber-500/20 hover:text-amber-400 transition text-slate-300">Horor</button>
+            <button onclick="filterGenre('Drama')" class="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-amber-500/20 hover:text-amber-400 transition text-slate-300">Drama</button>
+            <button onclick="filterGenre('Komedi')" class="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-amber-500/20 hover:text-amber-400 transition text-slate-300">Komedi</button>
+            <button onclick="filterGenre('Anime')" class="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-amber-500/20 hover:text-amber-400 transition text-slate-300">Anime</button>
+            <button onclick="filterGenre('Romantis')" class="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-amber-500/20 hover:text-amber-400 transition text-slate-300">Romantis</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sidebar Footer Banner / Direct Promo -->
+      <div class="pt-4 border-t border-[#232330]">
+        <div onclick="handleDirectLinkClick()" class="p-3 rounded-xl bg-gradient-to-br from-amber-500/20 via-[#13131a] to-[#13131a] border border-amber-500/30 cursor-pointer hover:border-amber-400 transition group">
+          <div class="flex items-center gap-2">
+            <i data-lucide="crown" class="w-4 h-4 text-amber-400"></i>
+            <span class="text-xs font-bold text-white group-hover:text-amber-400">Akses Tanpa Batas</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Streaming 223+ Episode Full HD tanpa buffering.</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile Overlay Backdrop -->
+    <div id="mobile-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-20 hidden lg:hidden"></div>
+
+    <!-- ========================================== -->
+    <!-- MAIN CONTENT AREA (DYNAMIC VIEW PANELS)   -->
+    <!-- ========================================== -->
+    <main id="main-content" class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 space-y-8 overflow-y-auto">
+
+      <!-- ======================================================== -->
+      <!-- 1. VIEW PANEL: HOME (Default Active View)                 -->
+      <!-- ======================================================== -->
+      <section id="view-home" class="view-panel space-y-8">
+        
+        <!-- HERO BANNER -->
+        <div class="relative w-full rounded-3xl overflow-hidden border border-[#232330] bg-[#13131a] shadow-2xl group">
+          <div class="absolute inset-0 z-0">
+            <img 
+              src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1600&q=80" 
+              alt="Hero Movie" 
+              class="w-full h-full object-cover object-center opacity-40 group-hover:scale-105 transition-transform duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0b0b0e] via-[#0b0b0e]/70 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0b0b0e] via-[#0b0b0e]/80 to-transparent"></div>
+          </div>
+
+          <div class="relative z-10 p-6 sm:p-10 lg:p-14 max-w-2xl flex flex-col justify-end min-h-[360px] sm:min-h-[420px]">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-500 text-black">
+                UNGGULAN HARI INI
+              </span>
+              <span class="text-xs font-semibold text-slate-300 flex items-center gap-1">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i> 9.8 / 10
+              </span>
+              <span class="text-xs text-slate-400">• 223 Episode Lengkap</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight mb-3">
+              Cyber Horizon: <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">The Final Battle</span>
+            </h1>
+
+            <p class="text-xs sm:text-sm text-slate-300 line-clamp-3 mb-6 leading-relaxed">
+              Petualangan sci-fi paling dinantikan abad ini. Saksikan kelanjutan pertempuran lintas galaksi dengan resolusi 4K Ultra HD dan audio surround yang memukau.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <!-- Dual Action Button (Aturan 1: Buka Player + Direct Link) -->
+              <button 
+                onclick="handleWatchClick({ id: 'hero-1', title: 'Cyber Horizon: The Final Battle', poster: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1600&q=80', genre: 'Sci-Fi / Action', episodes: 223, rating: '9.8', views: '2.5M' })" 
+                class="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-amber-500/25 transition-all hover:scale-105 cursor-pointer"
+              >
+                <i data-lucide="play" class="w-4 h-4 fill-black"></i>
+                <span>Tonton Sekarang</span>
+              </button>
+
+              <button 
+                onclick="handleDirectLinkClick()" 
+                class="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm backdrop-blur-sm border border-white/10 flex items-center gap-2 transition cursor-pointer"
+              >
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span>Download HD</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- GENRE FILTER PILLS -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          <button onclick="filterGenre('Semua')" class="genre-chip px-4 py-1.5 rounded-full text-xs font-semibold bg-amber-500 text-black transition whitespace-nowrap">Semua</button>
+          <button onclick="filterGenre('Aksi')" class="genre-chip px-4 py-1.5 rounded-full text-xs font-semibold bg-[#13131a] hover:bg-[#1c1c26] text-slate-300 border border-[#232330] transition whitespace-nowrap">Aksi</button>
+          <button onclick="filterGenre('Horor')" class="genre-chip px-4 py-1.5 rounded-full text-xs font-semibold bg-[#13131a] hover:bg-[#1c1c26] text-slate-300 border border-[#232330] transition whitespace-nowrap">Horor</button>
+          <button onclick="filterGenre('Drama')" class="genre-chip px-4 py-1.5 rounded-full text-xs font-semibold bg-[#13131a] hover:bg-[#1c1c26] text-slate-300 border border-[#232330] transition whitespace-nowrap">Drama</button>
+          <button onclick="filterGenre('Komedi')" class="genre-chip px-4 py-1.5 rounded-full text-xs font-semibold bg-[#13131a] hover:bg-[#1c1c26] text-slate-300 border border-[#232330] transition whitespace-nowrap">Komedi</button>
+          <button onclick="filterGenre('Anime')" class="genre-chip px-4 py-1.5 rounded-full text-xs font-semibold bg-[#13131a] hover:bg-[#1c1c26] text-slate-300 border border-[#232330] transition whitespace-nowrap">Anime</button>
+          <button onclick="filterGenre('Romantis')" class="genre-chip px-4 py-1.5 rounded-full text-xs font-semibold bg-[#13131a] hover:bg-[#1c1c26] text-slate-300 border border-[#232330] transition whitespace-nowrap">Romantis</button>
+        </div>
+
+        <!-- SECTION: NEW RELEASE -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-lg sm:text-xl font-extrabold text-white flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-5 h-5 text-amber-400"></i>
+                New Release
+              </h2>
+              <p class="text-xs text-slate-400">Rilisan film dan episode terbaru minggu ini</p>
+            </div>
+            <a href="javascript:void(0)" onclick="handleDirectLinkClick()" class="text-xs font-bold text-amber-400 hover:underline flex items-center gap-1">
+              Lihat Semua <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+
+          <!-- Cards Grid: Injected dynamically via JS with dual-action -->
+          <div id="new-release-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+            <!-- Cards rendered by JS -->
+          </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- ATURAN 2: BANNER HORIZONTAL PERSIS DI BAWAH NEW RELEASE -->
+        <!-- ======================================================== -->
+        <div id="ad-horizontal-container" class="my-6 p-3 rounded-2xl bg-[#13131a] border border-amber-500/20 flex flex-col items-center justify-center overflow-hidden">
+          <span class="text-[9px] uppercase tracking-widest text-slate-500 font-semibold mb-1">Sponsor / Iklan</span>
+          <div class="w-full flex justify-center max-w-[728px] overflow-hidden">
+            <script>
+              atOptions = {
+                'key' : 'd3cf8ebd0f04fb213b7365eb4a2a5a1d',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+              };
+            </script>
+            <script src="https://bleatbehind.com/d3cf8ebd0f04fb213b7365eb4a2a5a1d/invoke.js"></script>
+          </div>
+        </div>
+
+        <!-- SECTION: TRENDING NOW -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-lg sm:text-xl font-extrabold text-white flex items-center gap-2">
+                <i data-lucide="trending-up" class="w-5 h-5 text-rose-500"></i>
+                Trending Now
+              </h2>
+              <p class="text-xs text-slate-400">Paling banyak ditonton dalam 24 jam terakhir</p>
+            </div>
+            <a href="javascript:void(0)" onclick="handleDirectLinkClick()" class="text-xs font-bold text-amber-400 hover:underline flex items-center gap-1">
+              Lihat Top 10 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+
+          <div id="trending-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
+            <!-- Cards rendered by JS -->
+          </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- ATURAN 4: NATIVE BANNER DIBAGIAN STRATEGIS (DI BAWAH TRENDING) -->
+        <!-- ======================================================== -->
+        <div class="my-6 p-4 rounded-2xl bg-[#13131a] border border-[#232330]">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Rekomendasi Bersponsor</span>
+            <span class="text-[9px] text-slate-500">Iklan Asli</span>
+          </div>
+          <div class="w-full min-h-[100px] flex items-center justify-center">
+            <script async="async" data-cfasync="false" src="https://bleatbehind.com/20d4f85d48fb24cf61c07638b0580f9c/invoke.js"></script>
+            <div id="container-20d4f85d48fb24cf61c07638b0580f9c"></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- 2. VIEW PANEL: VIRAL (Syarat 1)                          -->
+      <!-- ======================================================== -->
+      <section id="view-viral" class="view-panel hidden space-y-6">
+        <div class="flex items-center justify-between border-b border-[#232330] pb-4">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+              <i data-lucide="flame" class="w-6 h-6 text-orange-500"></i> Video Viral &amp; Trending
+            </h2>
+            <p class="text-xs text-slate-400">Kumpulan konten FYP paling ramai diperbincangkan netizen.</p>
+          </div>
+          <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-500/20 text-orange-400 border border-orange-500/30">
+            Realtime Viral
+          </span>
+        </div>
+
+        <div id="viral-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- 3. VIEW PANEL: OME TV (Syarat 1)                         -->
+      <!-- ======================================================== -->
+      <section id="view-ometv" class="view-panel hidden space-y-6">
+        <div class="flex items-center justify-between border-b border-[#232330] pb-4">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+              <i data-lucide="video" class="w-6 h-6 text-emerald-400"></i> Ome TV Live Server
+            </h2>
+            <p class="text-xs text-slate-400">Streaming interaksi video acak internasional, prank lucu, &amp; obrolan seru.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-xs font-bold text-emerald-400">12.450 Online</span>
+          </div>
+        </div>
+
+        <div id="ometv-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- 4. VIEW PANEL: LANGUAGE (Semua Bahasa Harus Ada)         -->
+      <!-- ======================================================== -->
+      <section id="view-language" class="view-panel hidden space-y-6">
+        <div class="border-b border-[#232330] pb-4">
+          <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+            <i data-lucide="globe" class="w-6 h-6 text-sky-400"></i> Pilih Bahasa Video (Global Hub)
+          </h2>
+          <p class="text-xs text-slate-400">Tersedia audio dubbing dan subtitle dalam berbagai bahasa di seluruh dunia.</p>
+        </div>
+
+        <div id="language-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          <!-- Injected via JS with flags & counts -->
+        </div>
+
+        <div class="mt-8">
+          <h3 id="current-lang-title" class="text-sm font-bold text-white mb-3">Video Berbahasa Terpilih</h3>
+          <div id="language-movies-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- 5. VIEW PANEL: CONTENT SESUAI ALAMAT/NEGARA MEREKA       -->
+      <!-- ======================================================== -->
+      <section id="view-content" class="view-panel hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#232330] pb-4">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+              <i data-lucide="map-pin" class="w-6 h-6 text-rose-400"></i> Konten Berdasarkan Lokasi Negara
+            </h2>
+            <p class="text-xs text-slate-400">Sistem mendeteksi dan mengelompokkan katalog sesuai negara asal penonton.</p>
+          </div>
+          <div class="flex items-center gap-2 bg-[#13131a] px-3 py-1.5 rounded-xl border border-[#232330]">
+            <span class="text-xs text-slate-400">Lokasi Terdeteksi:</span>
+            <span id="detected-country-text" class="text-xs font-bold text-amber-400">Indonesia (ID)</span>
+          </div>
+        </div>
+
+        <!-- Country Selector Buttons -->
+        <div class="flex flex-wrap gap-2">
+          <button onclick="changeCountry('ID')" class="px-3 py-1.5 rounded-xl bg-amber-500 text-black text-xs font-bold flex items-center gap-1.5">
+            <span>🇮🇩 Indonesia</span>
+          </button>
+          <button onclick="changeCountry('US')" class="px-3 py-1.5 rounded-xl bg-[#13131a] hover:bg-[#1c1c26] border border-[#232330] text-slate-200 text-xs font-semibold flex items-center gap-1.5">
+            <span>🇺🇸 United States</span>
+          </button>
+          <button onclick="changeCountry('JP')" class="px-3 py-1.5 rounded-xl bg-[#13131a] hover:bg-[#1c1c26] border border-[#232330] text-slate-200 text-xs font-semibold flex items-center gap-1.5">
+            <span>🇯🇵 Jepang</span>
+          </button>
+          <button onclick="changeCountry('KR')" class="px-3 py-1.5 rounded-xl bg-[#13131a] hover:bg-[#1c1c26] border border-[#232330] text-slate-200 text-xs font-semibold flex items-center gap-1.5">
+            <span>🇰🇷 Korea Selatan</span>
+          </button>
+          <button onclick="changeCountry('GB')" class="px-3 py-1.5 rounded-xl bg-[#13131a] hover:bg-[#1c1c26] border border-[#232330] text-slate-200 text-xs font-semibold flex items-center gap-1.5">
+            <span>🇬🇧 Inggris Raya</span>
+          </button>
+          <button onclick="changeCountry('IN')" class="px-3 py-1.5 rounded-xl bg-[#13131a] hover:bg-[#1c1c26] border border-[#232330] text-slate-200 text-xs font-semibold flex items-center gap-1.5">
+            <span>🇮🇳 India</span>
+          </button>
+          <button onclick="changeCountry('TH')" class="px-3 py-1.5 rounded-xl bg-[#13131a] hover:bg-[#1c1c26] border border-[#232330] text-slate-200 text-xs font-semibold flex items-center gap-1.5">
+            <span>🇹🇭 Thailand</span>
+          </button>
+        </div>
+
+        <div class="mt-4">
+          <h3 id="country-content-title" class="text-sm font-bold text-white mb-3">Tayangan Populer di Indonesia</h3>
+          <div id="country-movies-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- 6. VIEW PANEL: MEDIA X & FB (LOGIN HARUS BISA)            -->
+      <!-- ======================================================== -->
+      <section id="view-media" class="view-panel hidden space-y-6">
+        <div class="border-b border-[#232330] pb-4">
+          <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+            <i data-lucide="share-2" class="w-6 h-6 text-indigo-400"></i> Autentikasi Media X &amp; Facebook
+          </h2>
+          <p class="text-xs text-slate-400">Hubungkan akun media sosial Anda untuk sinkronisasi watchlist dan bookmark.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+          
+          <!-- X (Twitter) Login Card -->
+          <div class="p-6 rounded-2xl bg-[#13131a] border border-[#232330] space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-black border border-white/10 flex items-center justify-center font-black text-white text-lg">
+                  𝕏
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-white">Akun 𝕏 (Twitter)</h3>
+                  <p class="text-[11px] text-slate-400">Login dengan handle @username</p>
+                </div>
+              </div>
+              <span id="x-status-badge" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400">
+                Belum Terhubung
+              </span>
+            </div>
+
+            <div id="x-login-form" class="space-y-3 pt-2">
+              <div>
+                <label class="text-xs text-slate-300 font-semibold block mb-1">Username / ID 𝕏</label>
+                <input type="text" id="x-input-user" placeholder="Contoh: user_keren" class="w-full px-3 py-2 rounded-xl bg-[#0b0b0e] border border-[#232330] text-xs text-white focus:outline-none focus:border-amber-400" />
+              </div>
+              <button onclick="handleSocialLogin('x')" class="w-full py-2.5 rounded-xl bg-white text-black font-bold text-xs hover:bg-slate-200 transition flex items-center justify-center gap-2">
+                <span>Masuk dengan 𝕏</span>
+              </button>
+            </div>
+
+            <div id="x-logged-in-profile" class="hidden p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-emerald-500 text-black font-bold flex items-center justify-center text-xs" id="x-profile-avatar">U</div>
+                <div>
+                  <p class="text-xs font-bold text-white" id="x-profile-name">@user</p>
+                  <p class="text-[10px] text-emerald-400 font-semibold">Terkoneksi Aktif</p>
+                </div>
+              </div>
+              <button onclick="handleLogoutSocial('x')" class="text-xs text-rose-400 hover:underline">Keluar</button>
+            </div>
+          </div>
+
+          <!-- Facebook Login Card -->
+          <div class="p-6 rounded-2xl bg-[#13131a] border border-[#232330] space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-[#1877F2] flex items-center justify-center font-black text-white text-xl">
+                  f
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-white">Facebook Connect</h3>
+                  <p class="text-[11px] text-slate-400">Sinkronisasi teman &amp; riwayat</p>
+                </div>
+              </div>
+              <span id="fb-status-badge" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400">
+                Belum Terhubung
+              </span>
+            </div>
+
+            <div id="fb-login-form" class="space-y-3 pt-2">
+              <div>
+                <label class="text-xs text-slate-300 font-semibold block mb-1">Email / Telepon Facebook</label>
+                <input type="text" id="fb-input-user" placeholder="nama@email.com" class="w-full px-3 py-2 rounded-xl bg-[#0b0b0e] border border-[#232330] text-xs text-white focus:outline-none focus:border-amber-400" />
+              </div>
+              <button onclick="handleSocialLogin('fb')" class="w-full py-2.5 rounded-xl bg-[#1877F2] hover:bg-[#166fe5] text-white font-bold text-xs transition flex items-center justify-center gap-2">
+                <span>Masuk dengan Facebook</span>
+              </button>
+            </div>
+
+            <div id="fb-logged-in-profile" class="hidden p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-blue-500 text-white font-bold flex items-center justify-center text-xs" id="fb-profile-avatar">F</div>
+                <div>
+                  <p class="text-xs font-bold text-white" id="fb-profile-name">Pengguna FB</p>
+                  <p class="text-[10px] text-blue-400 font-semibold">Terkoneksi Aktif</p>
+                </div>
+              </div>
+              <button onclick="handleLogoutSocial('fb')" class="text-xs text-rose-400 hover:underline">Keluar</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- 7. VIEW PANEL: HISTORY (Syarat 1)                        -->
+      <!-- ======================================================== -->
+      <section id="view-history" class="view-panel hidden space-y-6">
+        <div class="flex items-center justify-between border-b border-[#232330] pb-4">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+              <i data-lucide="clock" class="w-6 h-6 text-purple-400"></i> Riwayat Menonton
+            </h2>
+            <p class="text-xs text-slate-400">Daftar film dan episode yang telah Anda putar sebelumnya.</p>
+          </div>
+          <button onclick="clearHistory()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-rose-500/20 hover:text-rose-400 text-xs font-bold text-slate-300 border border-[#232330] transition">
+            Bersihkan Riwayat
+          </button>
+        </div>
+
+        <div id="history-grid" class="space-y-3">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- 8. VIEW PANEL: SETTING (Syarat 1)                        -->
+      <!-- ======================================================== -->
+      <section id="view-setting" class="view-panel hidden space-y-6 max-w-3xl">
+        <div class="border-b border-[#232330] pb-4">
+          <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+            <i data-lucide="settings" class="w-6 h-6 text-slate-400"></i> Pengaturan Aplikasi
+          </h2>
+          <p class="text-xs text-slate-400">Kelola preferensi pemutaran, kualitas video, dan tampilan.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="p-4 rounded-2xl bg-[#13131a] border border-[#232330] flex items-center justify-between">
+            <div>
+              <p class="text-sm font-bold text-white">Kualitas Pemutaran Default</p>
+              <p class="text-xs text-slate-400">Atur resolusi awal setiap pemutar dibuka</p>
+            </div>
+            <select class="px-3 py-1.5 rounded-xl bg-[#0b0b0e] border border-[#232330] text-xs font-semibold text-amber-400 focus:outline-none">
+              <option>Ultra HD 4K</option>
+              <option selected>Full HD 1080p</option>
+              <option>HD 720p</option>
+              <option>Hemat Kuota 480p</option>
+            </select>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-[#13131a] border border-[#232330] flex items-center justify-between">
+            <div>
+              <p class="text-sm font-bold text-white">Putar Otomatis Episode Berikutnya</p>
+              <p class="text-xs text-slate-400">Lompat otomatis ke episode selanjutnya (1 s/d 223)</p>
+            </div>
+            <input type="checkbox" checked class="w-5 h-5 accent-amber-500 rounded cursor-pointer" />
+          </div>
+
+          <div class="p-4 rounded-2xl bg-[#13131a] border border-[#232330] flex items-center justify-between">
+            <div>
+              <p class="text-sm font-bold text-white">Monetisasi &amp; Server VIP</p>
+              <p class="text-xs text-slate-400">Buka server direct link berkecepatan tinggi</p>
+            </div>
+            <button onclick="handleDirectLinkClick()" class="px-4 py-1.5 rounded-lg bg-amber-500 text-black font-bold text-xs">
+              Aktifkan Direct VIP
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
